@@ -147,15 +147,9 @@ module.exports = function parse(feedXML, callback) {
       }
       let description = '';
       if (tmpEpisode.description) {
-        description = tmpEpisode.description.alternate || '';
-      }
-      let summary = '';
-      if (tmpEpisode.summary) {
-        // Fall back to description
-        summary = tmpEpisode.description.primary || description;
+        description = tmpEpisode.description.alternate || tmpEpisode.description.primary || '';
       }
       tmpEpisode.description = description;
-      tmpEpisode.summary = summary;
       result.episodes.push(tmpEpisode);
       tmpEpisode = null;
     }
