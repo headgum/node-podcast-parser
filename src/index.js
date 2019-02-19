@@ -44,23 +44,12 @@ module.exports = function parse(feedXML, callback) {
               lang = `${lang}-${lang}`;
             }
           }
-          return {
-            language: lang.toLowerCase()
-          };
-        },
+          return { language: lang.toLowerCase() }; },
         'itunes:author': 'author',
         'itunes:subtitle': 'description.short',
         'description': 'description.long',
-        'ttl': text => {
-          return {
-            ttl: parseInt(text)
-          };
-        },
-        'pubDate': text => {
-          return {
-            updated: new Date(text)
-          };
-        },
+        'ttl': text => { return { ttl: parseInt(text) }; },
+        'pubDate': text => { return { updated: new Date(text) }; },
         'itunes:explicit': isExplicit,
         'itunes:type': 'type',
       };
@@ -90,18 +79,15 @@ module.exports = function parse(feedXML, callback) {
       }
     } else if (node.name === 'item' && node.parent.name === 'channel') {
       // New item
-      tmpEpisode = {};
+      tmpEpisode = {
+      };
       node.target = tmpEpisode;
       node.textMap = {
         'title': true,
         'guid': true,
         'itunes:summary': 'description.primary',
         'description': 'description.alternate',
-        'pubDate': text => {
-          return {
-            published: new Date(text)
-          };
-        },
+        'pubDate': text => { return { published: new Date(text) }; },
         'itunes:duration': text => {
           return {
             // parse '1:03:13' into 3793 seconds
@@ -148,14 +134,9 @@ module.exports = function parse(feedXML, callback) {
       // coalesce descriptions (no breaking change)
       let description = '';
       if (tmpEpisode.description) {
-        description = tmpEpisode.description.alternate || '';
-      }
-      let summary = '';
-      if (tmpEpisode.summary) {
-        summary = tmpEpisode.description.primary || '';
+        description = tmpEpisode.description.primary || tmpEpisode.description.alternate || '';
       }
       tmpEpisode.description = description;
-      tmpEpisode.summary = summary;
       result.episodes.push(tmpEpisode);
       tmpEpisode = null;
     }
@@ -198,7 +179,7 @@ module.exports = function parse(feedXML, callback) {
     }
   };
 
-  parser.onend = function () {
+  parser.onend = function() {
     // sort by date descending
     if (result.episodes) {
       result.episodes = result.episodes.sort((item1, item2) => {
