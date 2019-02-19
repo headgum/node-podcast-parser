@@ -38,9 +38,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/akupila/node-podcast-parser"
+    "url": "https://github.com/headgum/node-podcast-parser"
   },
   "bugs": {
-    "url": "https://github.com/akupila/node-podcast-parser/issues"
+    "url": "https://github.com/headgum/node-podcast-parser/issues"
   }
 }
