@@ -144,14 +144,14 @@ module.exports = function parse(feedXML, callback) {
       if (!result.episodes) {
         result.episodes = [];
       }
-      // coalesce descriptions (no breaking change)
       var description = '';
       if (tmpEpisode.description) {
         description = tmpEpisode.description.alternate || '';
       }
       var summary = '';
       if (tmpEpisode.summary) {
-        summary = tmpEpisode.description.primary || '';
+        // Fall back to description
+        summary = tmpEpisode.description.primary || description;
       }
       tmpEpisode.description = description;
       tmpEpisode.summary = summary;
