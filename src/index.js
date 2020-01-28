@@ -147,7 +147,7 @@ module.exports = function parse(feedXML, callback) {
       }
       let description = '';
       if (tmpEpisode.description) {
-        description = tmpEpisode.description.alternate || tmpEpisode.description.primary || '';
+        description = tmpEpisode.description.primary || tmpEpisode.description.alternate || '';
       }
       tmpEpisode.description = description;
       result.episodes.push(tmpEpisode);
