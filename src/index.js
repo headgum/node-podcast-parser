@@ -63,6 +63,11 @@ module.exports = function parse(feedXML, callback) {
         },
         'itunes:explicit': isExplicit,
         'itunes:type': 'type',
+        'itunes:keywords': text => {
+          return {
+            keywords: text.split(',')
+          }
+        }
       };
     } else if (node.name === 'itunes:image' && node.parent.name === 'channel') {
       result.image = node.attributes.href;
