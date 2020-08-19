@@ -64,7 +64,12 @@ module.exports = function parse(feedXML, callback) {
           };
         },
         'itunes:explicit': isExplicit,
-        'itunes:type': 'type'
+        'itunes:type': 'type',
+        'itunes:keywords': function itunesKeywords(text) {
+          return {
+            keywords: text.split(',')
+          };
+        }
       };
     } else if (node.name === 'itunes:image' && node.parent.name === 'channel') {
       result.image = node.attributes.href;
@@ -146,7 +151,7 @@ module.exports = function parse(feedXML, callback) {
       }
       var description = '';
       if (tmpEpisode.description) {
-        description = tmpEpisode.description.alternate || tmpEpisode.description.primary || '';
+        description = tmpEpisode.description.primary || tmpEpisode.description.alternate || '';
       }
       tmpEpisode.description = description;
       result.episodes.push(tmpEpisode);
