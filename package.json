@@ -1,42 +1,28 @@
 {
-  "name": "node-podcast-parser",
+  "name": "@headgum/node-podcast-parser",
   "description": "Parse podcast feeds into objects",
-  "version": "2.3.3",
+  "version": "2.4.0",
   "main": "index.js",
   "scripts": {
     "build": "babel src/index.js --out-file index.js"
   },
-  "keywords": [
-    "podcast",
-    "node",
-    "rss",
-    "feed",
-    "parse",
-    "xml"
-  ],
   "author": "Antti Kupila <akupila@gmail.com>",
   "license": "ISC",
-  "devDependencies": {
-    "babel-cli": "^6.6.4",
-    "babel-preset-env": "^1.7.0",
-    "coveralls": "^3.1.0",
-    "expect.js": "0.3.1",
-    "istanbul": "^0.4.5",
-    "mocha": "^5.1.1",
-    "mocha-lcov-reporter": "1.0.0"
-  },
   "dependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
     "lodash": "^4.17.20",
     "sax": "1.1.5"
   },
-  "engines": {
-    "node": ">= 4.0.0"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/headgum/node-podcast-parser"
+    "url": "git+https://github.com/headgum/node-podcast-parser.git"
   },
   "bugs": {
     "url": "https://github.com/headgum/node-podcast-parser/issues"
+  },
+  "homepage": "https://github.com/headgum/node-podcast-parser#readme",
+  "directories": {
+    "test": "test"
   }
 }

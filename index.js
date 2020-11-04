@@ -1,21 +1,19 @@
-'use strict';
+"use strict";
 
 var _ = require('lodash');
+
 var sax = require('sax');
 
 module.exports = function parse(feedXML, callback) {
   var parser = sax.parser({
     strict: true,
     lowercase: true
-  });
-
-  // -----------------------------------------------------
+  }); // -----------------------------------------------------
 
   var result = {
     categories: []
   };
   var node = null;
-
   var tmpEpisode;
 
   parser.onopentag = function (nextNode) {
@@ -37,15 +35,17 @@ module.exports = function parse(feedXML, callback) {
         'link': true,
         'language': function language(text) {
           var lang = text;
+
           if (!/\w\w-\w\w/i.test(text)) {
             if (lang === 'en') {
               // sloppy language does not conform to ISO 639
               lang = 'en-us';
             } else {
               // de-de etc
-              lang = lang + '-' + lang;
+              lang = "".concat(lang, "-").concat(lang);
             }
           }
+
           return {
             language: lang.toLowerCase()
           };
@@ -81,14 +81,15 @@ module.exports = function parse(feedXML, callback) {
       };
     } else if (node.name === 'itunes:category') {
       var path = [node.attributes.text];
-      var tmp = node.parent;
-      // go up to fill in parent categories
+      var tmp = node.parent; // go up to fill in parent categories
+
       while (tmp && tmp.name === 'itunes:category') {
         path.unshift(tmp.attributes.text);
         tmp = tmp.parent;
       }
 
       var lastCategoryIndex = result.categories.length - 1;
+
       if (result.categories[lastCategoryIndex] === path[0]) {
         // overwrite last category because this one is more specific
         result.categories[lastCategoryIndex] = path.join('>');
@@ -115,9 +116,11 @@ module.exports = function parse(feedXML, callback) {
             duration: text.split(':').reverse().reduce(function (acc, val, index) {
               var steps = [60, 60, 24];
               var muliplier = 1;
+
               while (index--) {
                 muliplier *= steps[index];
               }
+
               return acc + parseInt(val) * muliplier;
             }, 0)
           };
@@ -149,10 +152,13 @@ module.exports = function parse(feedXML, callback) {
       if (!result.episodes) {
         result.episodes = [];
       }
+
       var description = '';
+
       if (tmpEpisode.description) {
         description = tmpEpisode.description.primary || tmpEpisode.description.alternate || '';
       }
+
       tmpEpisode.description = description;
       result.episodes.push(tmpEpisode);
       tmpEpisode = null;
@@ -161,11 +167,13 @@ module.exports = function parse(feedXML, callback) {
 
   parser.ontext = parser.oncdata = function handleText(text) {
     text = text.trim();
+
     if (text.length === 0) {
       return;
     }
-
     /* istanbul ignore if */
+
+
     if (!node || !node.parent) {
       // This should never happen but it's here as a safety net
       // I guess this might happen if a feed was incorrectly formatted
@@ -174,16 +182,17 @@ module.exports = function parse(feedXML, callback) {
 
     if (node.parent.textMap) {
       var key = node.parent.textMap[node.name];
+
       if (key) {
         if (typeof key === 'function') {
           // value preprocessor
           Object.assign(node.parent.target, key(text));
         } else {
           var keyName = key === true ? node.name : key;
-          var prevValue = node.parent.target[keyName];
-          // ontext can fire multiple times, if so append to previous value
+          var prevValue = node.parent.target[keyName]; // ontext can fire multiple times, if so append to previous value
           // this happens with "text &amp; other text"
-          _.set(node.parent.target, keyName, prevValue ? prevValue + ' ' + text : text);
+
+          _.set(node.parent.target, keyName, prevValue ? "".concat(prevValue, " ").concat(text) : text);
         }
       }
     }
@@ -192,6 +201,7 @@ module.exports = function parse(feedXML, callback) {
       if (!tmpEpisode.categories) {
         tmpEpisode.categories = [];
       }
+
       tmpEpisode.categories.push(text);
     }
   };
@@ -213,12 +223,11 @@ module.exports = function parse(feedXML, callback) {
     }
 
     result.categories = _.uniq(result.categories);
-
     callback(null, result);
-  };
-
-  // Annoyingly sax also emits an error
+  }; // Annoyingly sax also emits an error
   // https://github.com/isaacs/sax-js/pull/115
+
+
   try {
     parser.write(feedXML).close();
   } catch (error) {
