@@ -150,11 +150,18 @@ module.exports = function parse(feedXML, callback) {
       if (!result.episodes) {
         result.episodes = [];
       }
+
       let description = '';
+      let descriptionAlt = '';
+
       if (tmpEpisode.description) {
         description = tmpEpisode.description.primary || tmpEpisode.description.alternate || '';
+        descriptionAlt = tmpEpisode.description.alternate;
       }
+
       tmpEpisode.description = description;
+      tmpEpisode.descriptionAlt = descriptionAlt;
+
       result.episodes.push(tmpEpisode);
       tmpEpisode = null;
     }
